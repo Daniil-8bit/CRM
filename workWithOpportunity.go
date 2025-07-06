@@ -29,7 +29,10 @@ func addOpportunity(id int, num int, name string) {
 
 func showOpportunities() {
 
-	connStr := "user=postgres password=postgres1234 dbname=crm sslmode=disable"
+	var cd ConfigData = readConfigFile()
+
+	connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", cd.DbUser, cd.DbUserPassword, cd.DbName)
+	fmt.Println(connStr)
 	db, err := sql.Open("postgres", connStr)
 
 	if err != nil {
