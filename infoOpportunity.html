@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Opportunity</title>
+    </head>
+    <body>
+        <h2>Opportunity {{ .OppId }}</h2><br>
+        <form action="/update" method="POST">
+            <input type="hidden" name="oppId" id="oppId" value="{{ .OppId }}">
+            <input type="submit" value="Save"><br>
+            <label for="oppNumber">Number: </label><br>
+            <input type="text" name="oppNumber" id="oppNumber" value="{{ .OppNumber }}"><br>
+            <label for="oppName">Name: </label><br>
+            <input type="text" name="oppName" id="oppName" value="{{ .OppName }}"><br>
+        </form>
+    </body>
+</html>

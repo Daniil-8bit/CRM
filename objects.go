@@ -1,9 +1,9 @@
 package main
 
 type Opportunity struct {
-	oppId      int
-	oppNumber  int
-	oppName    string
+	OppId      int
+	OppNumber  int
+	OppName    string
 	oppOwner   Contact
 	oppLead    Lead
 	oppAccount Account

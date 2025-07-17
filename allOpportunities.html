@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All opportunities</title>
+</head>
+<body>
+    <div>
+
+    </div>
+    <div>
+        <table border="1" style="width: 600px;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Number</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Opportunities}}
+                    <tr>
+                        <th> <a href="/Opportunity?id={{.OppId}}">{{ .OppId }}</a></th>
+                        <th> {{ .OppNumber }} </th>
+                        <th> {{ .OppName }} </th>
+                    </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
