@@ -101,9 +101,12 @@ func updateOpportunity(oppotunity Opportunity) {
 }
 
 // need update
-func deleteOpportunity() {
+func deleteOpportunity(id int) {
 
-	connStr := "user=postgres password=postgres1234 dbname=crm sslmode=disable"
+	var cd ConfigData = readConfigFile()
+
+	connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", cd.DbUser, cd.DbUserPassword, cd.DbName)
+
 	db, err := sql.Open("postgres", connStr)
 
 	if err != nil {
@@ -111,6 +114,14 @@ func deleteOpportunity() {
 	}
 
 	defer db.Close()
+
+	delete, err := db.Exec("DELETE FROM public.\"Opportunity\" WHERE \"index\"=$1", id)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(delete.RowsAffected())
 }
 
 func getOpportunity(id int) Opportunity {

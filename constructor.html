@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constructor</title>
+</head>
+<body>
+    <h2>Actual objects</h2>
+    <button name="addObjectButton">Add</button>
+    <ul>
+        {{range .SystemObjects}}
+            <li> <a href="/editObject?tableName={{.TableName}}">{{.TableName}}</a> </li>
+        {{end}}
+    </ul>
+</body>
+</html>

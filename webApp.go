@@ -16,6 +16,10 @@ func startWebApp() {
 	http.HandleFunc("/allOpportunities", allOpportunitiesHandler)
 	http.HandleFunc("/Opportunity", getOpportunityHandler)
 	http.HandleFunc("/update", updateOpportunityHandler)
+	http.HandleFunc("/delete", deleteOpportunityHandler)
+	http.HandleFunc("/constructor", showAllObjects)
+	http.HandleFunc("/editObject", showObjectInfo)
+	http.HandleFunc("/changeField", changeFieldObjectInfo)
 	http.ListenAndServe(":4545", nil)
 }
 
@@ -161,6 +165,19 @@ func updateOpportunityHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/allOpportunities", http.StatusFound)
 }
 
+func deleteOpportunityHandler(w http.ResponseWriter, r *http.Request) {
+
+	id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	deleteOpportunity(int(id))
+
+	http.Redirect(w, r, "/allOpportunities", http.StatusMovedPermanently)
+}
+
 func loginPageHandler(w http.ResponseWriter, r *http.Request) {
 
 	templ, err := template.ParseFiles("loginPage.html")
@@ -184,4 +201,71 @@ func loginCheckHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprint(w, "Data is incorrect!")
 	}
+}
+
+type ObjectsView struct {
+	SystemObjects []DBTables
+}
+
+func showAllObjects(w http.ResponseWriter, r *http.Request) {
+
+	var SystemObjects []DBTables = getDBObjects()
+
+	data := ObjectsView{
+		SystemObjects: SystemObjects,
+	}
+
+	fmt.Println("System objects: ", SystemObjects)
+
+	tmpl, err := template.ParseFiles("constructor.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	tmpl.Execute(w, data)
+}
+
+func showObjectInfo(w http.ResponseWriter, r *http.Request) {
+
+	tableName := r.URL.Query().Get("tableName")
+
+	var tableInfo DBTableInfo = getDBObjectsData(tableName)
+
+	tmpl, err := template.ParseFiles("editObject.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	tmpl.Execute(w, tableInfo)
+}
+
+type FieldObjectInfo struct {
+	TableName string
+	FieldName string
+	FieldType string
+}
+
+func changeFieldObjectInfo(w http.ResponseWriter, r *http.Request) {
+
+	tableName := r.URL.Query().Get("tableName")
+	fieldName := r.URL.Query().Get("fieldName")
+	fieldType := r.URL.Query().Get("fieldType")
+
+	changeField := FieldObjectInfo{
+		TableName: tableName,
+		FieldName: fieldName,
+		FieldType: fieldType,
+	}
+
+	tmpl, err := template.ParseFiles("editField.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	tmpl.Execute(w, changeField)
+
+	http.Redirect(w, r, "/constructor", http.StatusFound)
 }

@@ -1,6 +1,6 @@
 {
-    "dbUser":"postgres",
-    "dbUserPassword":"postgres1234",
-    "dbName":"crm",
+    "dbUser":"",
+    "dbUserPassword":"",
+    "dbName":"",
     "appPort":80
 }

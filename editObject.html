@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object {{.TableName}}</title>
+</head>
+<body>
+    <h2>Object "{{.TableName}}"</h2>
+    <table border="1" style="border-collapse: collapse;">
+        <th>Field</th>
+        <th>Type</th>
+        {{range $key, $value := .Fields}}
+            <tr>
+                <td>{{$key}}</td>
+                <td>{{$value}}</td>
+                <td><a href="/changeField?tableName={{$.TableName}}&fieldName={{$key}}&fieldType={{$value}}">Change</a></td>
+                <td><a href="/deleteField?tableName={{$.TableName}}&fieldName={{$key}}">Delete</a></td>
+            </tr>
+        {{end}}
+    </table>
+</body>
+</html>

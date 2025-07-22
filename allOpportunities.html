@@ -24,6 +24,7 @@
                         <th> <a href="/Opportunity?id={{.OppId}}">{{ .OppId }}</a></th>
                         <th> {{ .OppNumber }} </th>
                         <th> {{ .OppName }} </th>
+                        <th> <a href="/delete?id={{ .OppId }}">Delete</a> </th>
                     </tr>
                 {{end}}
             </tbody>

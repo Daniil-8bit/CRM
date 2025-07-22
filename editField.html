@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object </title>
+</head>
+<body>
+    <h2>Object: {{.TableName}} Field: {{.FieldName}}</h2>
+    <form action="" method="POST">
+        <label for="fieldName">Field</label><br>
+        <input type="text" name="fieldName" id="fieldName" value="{{.FieldName}}"><br>
+        <label for="fieldType">Type</label><br>
+        <input type="text" name="fieldType" id="fieldType" value="{{.FieldType}}"><br>
+        <input type="submit" value="Change">
+    </form>
+</body>
+</html>
