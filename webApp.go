@@ -9,9 +9,10 @@ import (
 
 func startWebApp() {
 
-	http.HandleFunc("/", mainHandler)
+	http.HandleFunc("/", mainPageHandler)
 	http.HandleFunc("/Login", loginPageHandler)
 	http.HandleFunc("/LoginCheck", loginCheckHandler)
+	http.HandleFunc("/createOpportunity", createOpportunityHandler)
 	http.HandleFunc("/addNewOpportunity", newOpportunityHandler)
 	http.HandleFunc("/allOpportunities", allOpportunitiesHandler)
 	http.HandleFunc("/Opportunity", getOpportunityHandler)
@@ -20,10 +21,26 @@ func startWebApp() {
 	http.HandleFunc("/constructor", showAllObjects)
 	http.HandleFunc("/editObject", showObjectInfo)
 	http.HandleFunc("/changeField", changeFieldObjectInfo)
+	http.HandleFunc("/allLeads", allLeadsHandler)
+	http.HandleFunc("/updateLead", updateLeadHandler)
+	http.HandleFunc("/Lead", getLeadHandler)
+	http.HandleFunc("/createLead", createLeadHandler)
+	http.HandleFunc("/addNewLead", newLeadHandler)
+	http.HandleFunc("/LeadDelete", deleteLeadHandler)
 	http.ListenAndServe(":4545", nil)
 }
 
-func mainHandler(w http.ResponseWriter, r *http.Request) {
+func mainPageHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("mainPage.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	t.Execute(w, nil)
+}
+
+func createOpportunityHandler(w http.ResponseWriter, r *http.Request) {
 
 	//w.Write([]byte("Hello world!"))
 
@@ -37,8 +54,6 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func newOpportunityHandler(w http.ResponseWriter, r *http.Request) {
-
-	w.Write([]byte("New opportunity added successfuly"))
 
 	err := r.ParseForm()
 
@@ -57,6 +72,8 @@ func newOpportunityHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(newOpp.OppId, newOpp.OppNumber, newOpp.OppName)
 
 	addOpportunity(newOpp.OppId, newOpp.OppNumber, newOpp.OppName)
+
+	http.Redirect(w, r, "/allOpportunities", http.StatusFound)
 }
 
 type OpportunitiesView struct {
@@ -123,8 +140,6 @@ func getOpportunityHandler(w http.ResponseWriter, r *http.Request) {
 	var OneOpportunity Opportunity = getOpportunity(int(OpportunityId))
 
 	fmt.Println(OneOpportunity)
-
-	//fmt.Fprint(w, "Opportunity: ", id)
 
 	fmt.Println("id: ", id)
 
@@ -268,4 +283,111 @@ func changeFieldObjectInfo(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, changeField)
 
 	http.Redirect(w, r, "/constructor", http.StatusFound)
+}
+
+type LeadsView struct {
+	Leads []Lead
+}
+
+func allLeadsHandler(w http.ResponseWriter, r *http.Request) {
+
+	var LeadsArray []Lead = showLeads()
+
+	data := LeadsView{
+		Leads: LeadsArray,
+	}
+
+	t, err := template.ParseFiles("allLeads.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	t.Execute(w, data)
+}
+
+func updateLeadHandler(w http.ResponseWriter, r *http.Request) {
+
+	leadId, err := strconv.ParseInt(r.FormValue("leadId"), 10, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	leadName := r.FormValue("leadName")
+	leadSource := r.FormValue("leadSource")
+
+	lead := Lead{
+		LeadId:     int(leadId),
+		LeadName:   leadName,
+		LeadSource: leadSource,
+	}
+
+	updateLead(lead)
+
+	http.Redirect(w, r, "/allLeads", http.StatusFound)
+}
+
+func getLeadHandler(w http.ResponseWriter, r *http.Request) {
+
+	id := r.URL.Query().Get("id")
+
+	LeadId, err := strconv.ParseInt(id, 10, 64)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var OneLead Lead = getLead(int(LeadId))
+
+	t, err := template.ParseFiles("infoLead.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	t.Execute(w, OneLead)
+}
+
+func createLeadHandler(w http.ResponseWriter, r *http.Request) {
+
+	t, err := template.ParseFiles("addLead.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	t.Execute(w, nil)
+}
+
+func newLeadHandler(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var newLead Lead
+
+	oppId64, err := strconv.ParseInt(r.PostForm.Get("leadId"), 10, 64)
+	newLead.LeadId = int(oppId64)
+	newLead.LeadName = r.PostForm.Get("leadName")
+	newLead.LeadSource = r.PostForm.Get("leadSource")
+
+	addLead(newLead.LeadId, newLead.LeadName, newLead.LeadSource)
+
+	http.Redirect(w, r, "/allLeads", http.StatusFound)
+}
+
+func deleteLeadHandler(w http.ResponseWriter, r *http.Request) {
+
+	id, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	deleteLead(int(id))
+
+	http.Redirect(w, r, "/allLeads", http.StatusFound)
 }

@@ -10,11 +10,11 @@ type Opportunity struct {
 }
 
 type Lead struct {
-	leadId      int
-	leadNumber  int
+	LeadId      int
+	LeadName    string
 	leadOwner   Contact
 	leadAccount Account
-	leadSource  string
+	LeadSource  string
 }
 
 type Contact struct {

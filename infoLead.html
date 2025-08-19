@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lead</title>
+    </head>
+    <body>
+        <h2>Lead {{ .LeadId }}</h2><br>
+        <form action="/updateLead" method="POST">
+            <input type="hidden" name="leadId" id="leadId" value="{{ .LeadId }}">
+            <input type="submit" value="Save"><br>
+            <label for="LeadName">Name: </label><br>
+            <input type="text" name="leadName" id="leadName" value="{{ .LeadName }}"><br>
+            <label for="leadSource">Source: </label><br>
+            <input type="text" name="leadSource" id="leadSource" value="{{ .LeadSource }}"><br>
+        </form>
+    </body>
+</html>

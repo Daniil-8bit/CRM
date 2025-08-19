@@ -9,7 +9,9 @@ import (
 
 func addOpportunity(id int, num int, name string) {
 
-	connStr := "user=postgres password=postgres1234 dbname=crm sslmode=disable"
+	var cd ConfigData = readConfigFile()
+
+	connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", cd.DbUser, cd.DbUserPassword, cd.DbName)
 	db, err := sql.Open("postgres", connStr)
 
 	if err != nil {
@@ -80,7 +82,9 @@ func showOppInfo(op []Opportunity) {
 
 func updateOpportunity(oppotunity Opportunity) {
 
-	connStr := "user=postgres password=postgres1234 dbname=crm sslmode=disable"
+	var cd ConfigData = readConfigFile()
+
+	connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", cd.DbUser, cd.DbUserPassword, cd.DbName)
 	db, err := sql.Open("postgres", connStr)
 
 	if err != nil {
@@ -89,7 +93,7 @@ func updateOpportunity(oppotunity Opportunity) {
 
 	defer db.Close()
 
-	updateStatement := "UPDATE public.\"Opportunity\" SET \"OpportunityNumber\" = $1, \"OpportunityName\" = $2 WHERE \"index\" = $3"
+	updateStatement := "UPDATE public.\"Opportunity\" SET \"OpportunityNumber\" = $1, \"OpportunityName\" = $2 WHERE \"OppId\" = $3"
 
 	update, err := db.Exec(updateStatement, oppotunity.OppNumber, oppotunity.OppName, oppotunity.OppId)
 
@@ -115,7 +119,7 @@ func deleteOpportunity(id int) {
 
 	defer db.Close()
 
-	delete, err := db.Exec("DELETE FROM public.\"Opportunity\" WHERE \"index\"=$1", id)
+	delete, err := db.Exec("DELETE FROM public.\"Opportunity\" WHERE \"OppId\"=$1", id)
 
 	if err != nil {
 		fmt.Println(err)
@@ -138,7 +142,7 @@ func getOpportunity(id int) Opportunity {
 
 	defer db.Close()
 
-	query, err := db.Query("SELECT * FROM public.\"Opportunity\" WHERE index = $1", id)
+	query, err := db.Query("SELECT * FROM public.\"Opportunity\" WHERE \"OppId\" = $1", id)
 
 	if err != nil {
 		fmt.Println(err)
@@ -158,8 +162,6 @@ func getOpportunity(id int) Opportunity {
 		}
 
 	}
-
-	//fmt.Println(OppData)
 
 	return OppData
 }

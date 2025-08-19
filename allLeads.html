@@ -3,29 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All opportunities</title>
+    <title>All leads</title>
 </head>
 <body>
     <div>
         <a href="/" class="buttonMainPage"><button>Main page</button></a> 
-        <a href="/createOpportunity" class="buttonCreateOpportunity"><button>Creatre Opportunity</button></a>
+        <a href="/createLead" class="buttonCreateLead"><button>Creatre Lead</button></a>
     </div>
     <div>
         <table border="1" style="width: 600px;">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Number</th>
                     <th>Name</th>
+                    <th>Source</th>
                 </tr>
             </thead>
             <tbody>
-                {{range .Opportunities}}
+                {{range .Leads}}
                     <tr>
-                        <th> <a href="/Opportunity?id={{.OppId}}">{{ .OppId }}</a></th>
-                        <th> {{ .OppNumber }} </th>
-                        <th> {{ .OppName }} </th>
-                        <th> <a href="/delete?id={{ .OppId }}">Delete</a> </th>
+                        <th> <a href="/Lead?id={{.LeadId}}">{{ .LeadId }}</a></th>
+                        <th> {{ .LeadName }} </th>
+                        <th> {{ .LeadSource }} </th>
+                        <th> <a href="/LeadDelete?id={{ .LeadId }}">Delete</a> </th>
                     </tr>
                 {{end}}
             </tbody>
