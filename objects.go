@@ -18,14 +18,14 @@ type Lead struct {
 }
 
 type Contact struct {
-	contactId         int
-	contactSurname    string
-	contactName       string
-	contactMiddlename string
+	ContactId         int
+	ContactSurname    string
+	ContactName       string
+	ContactMiddlename string
 	contactCompany    *Account
-	contactPhone      string
-	contactEmail      string
-	contactJobTitle   string
+	ContactPhone      string
+	ContactEmail      string
+	ContactJobTitle   string
 	contactOwner      *Contact
 }
 

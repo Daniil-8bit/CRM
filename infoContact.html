@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contact</title>
+    </head>
+    <body>
+        <h2>Contact {{ .ContactId }}</h2><br>
+        <form action="/updateContact" method="POST">
+            <input type="hidden" name="contactId" id="contactId" value="{{ .ContactId }}">
+            <input type="submit" value="Save"><br>
+            <label for="contactSurname">Contact surname</label><br>
+            <input type="text" id="contactSurname" name="contactSurname" value="{{ .ContactSurname }}"><br>
+            <label for="contactName">Contact name</label><br>
+            <input type="text" id="contactName", name="contactName" value="{{ .ContactName }}"><br>
+            <label for="contactMiddlename">Contact middlename</label><br>
+            <input type="text" id="contactMiddlename", name="contactMiddlename" value="{{ .ContactMiddlename }}"><br>
+            <label for="contactPhone">Contact phone</label><br>
+            <input type="text" id="contactPhone", name="contactPhone" value="{{ .ContactPhone }}"><br>
+            <label for="contactEmail">Contact email</label><br>
+            <input type="text" id="contactEmail", name="contactEmail" value="{{ .ContactEmail }}"><br>
+            <label for="contactJobTitle">Contact job title</label>
+            <input type="text" id="contactJobTitle", name="contactJobTitle" value="{{ .ContactJobTitle }}"><br>
+        </form>
+    </body>
+</html>

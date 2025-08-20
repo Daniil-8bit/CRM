@@ -27,6 +27,12 @@ func startWebApp() {
 	http.HandleFunc("/createLead", createLeadHandler)
 	http.HandleFunc("/addNewLead", newLeadHandler)
 	http.HandleFunc("/LeadDelete", deleteLeadHandler)
+	http.HandleFunc("/allContacts", allContactsHandler)
+	http.HandleFunc("/updateContact", updateContactHandler)
+	http.HandleFunc("/Contact", getContactHandler)
+	http.HandleFunc("/createContact", createContactHandler)
+	http.HandleFunc("/addNewContact", newContactHandler)
+	http.HandleFunc("/ContactDelete", deleteContactHandler)
 	http.ListenAndServe(":4545", nil)
 }
 
@@ -80,14 +86,14 @@ type OpportunitiesView struct {
 	Opportunities []Opportunity
 }
 
-type TestStruct struct {
+/*type TestStruct struct {
 	Name string
 	Num  int
 }
 
 type TestView struct {
 	TestStrings []TestStruct
-}
+}*/
 
 func allOpportunitiesHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -390,4 +396,120 @@ func deleteLeadHandler(w http.ResponseWriter, r *http.Request) {
 	deleteLead(int(id))
 
 	http.Redirect(w, r, "/allLeads", http.StatusFound)
+}
+
+type ContactView struct {
+	Contacts []Contact
+}
+
+func allContactsHandler(w http.ResponseWriter, r *http.Request) {
+
+	var ContactArray []Contact = showContacts()
+
+	data := ContactView{
+
+		Contacts: ContactArray,
+	}
+
+	t, err := template.ParseFiles("allContacts.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	t.Execute(w, data)
+}
+
+func updateContactHandler(w http.ResponseWriter, r *http.Request) {
+
+	contactId, err := strconv.ParseInt(r.FormValue("contactId"), 10, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+	contactSurname := r.FormValue("contactSurname")
+	contactName := r.FormValue("contactName")
+	contactMiddlename := r.FormValue("contactMiddlename")
+	contactPhone := r.FormValue("contactPhone")
+	contactEmail := r.FormValue("contactEmail")
+	contactJobTitle := r.FormValue("contactJobTitle")
+
+	contact := Contact{
+		ContactId:         int(contactId),
+		ContactSurname:    contactSurname,
+		ContactName:       contactName,
+		ContactMiddlename: contactMiddlename,
+		ContactPhone:      contactPhone,
+		ContactEmail:      contactEmail,
+		ContactJobTitle:   contactJobTitle,
+	}
+
+	updateContact(contact)
+
+	http.Redirect(w, r, "/allContacts", http.StatusFound)
+}
+
+func getContactHandler(w http.ResponseWriter, r *http.Request) {
+
+	id := r.URL.Query().Get("id")
+	ContactId, err := strconv.ParseInt(id, 10, 64)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var OneContact Contact = getContact(int(ContactId))
+
+	t, err := template.ParseFiles("infoContact.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	t.Execute(w, OneContact)
+}
+
+func createContactHandler(w http.ResponseWriter, r *http.Request) {
+
+	t, err := template.ParseFiles("addContact.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	t.Execute(w, nil)
+}
+
+func newContactHandler(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var newContact Contact
+
+	contactId64, err := strconv.ParseInt(r.PostForm.Get("contactId"), 10, 64)
+	newContact.ContactId = int(contactId64)
+	newContact.ContactSurname = r.PostForm.Get("contactSurname")
+	newContact.ContactName = r.PostForm.Get("contactName")
+	newContact.ContactMiddlename = r.PostForm.Get("contactMiddlename")
+	newContact.ContactPhone = r.PostForm.Get("contactPhone")
+	newContact.ContactEmail = r.PostForm.Get("contactEmail")
+	newContact.ContactJobTitle = r.PostForm.Get("contactJobTitle")
+
+	addContact(newContact.ContactId, newContact.ContactSurname, newContact.ContactName, newContact.ContactMiddlename, newContact.ContactPhone, newContact.ContactEmail, newContact.ContactJobTitle)
+
+	http.Redirect(w, r, "/allContacts", http.StatusFound)
+}
+
+func deleteContactHandler(w http.ResponseWriter, r *http.Request) {
+
+	contactId, err := strconv.ParseInt(r.URL.Query().Get("id"), 10, 64)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	deleteContact(int(contactId))
+
+	http.Redirect(w, r, "/allContacts", http.StatusMovedPermanently)
 }
